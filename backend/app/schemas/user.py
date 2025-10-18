@@ -22,6 +22,7 @@ class UserResponse(BaseModel):
     email: str
     username: str
     is_active: bool
+    custom_text: Optional[str] = None
     created_at: datetime
 
     class Config:
@@ -38,3 +39,15 @@ class Token(BaseModel):
 # Schema para validação do token
 class TokenData(BaseModel):
     user_id: Optional[int] = None
+
+
+# Schema para atualizar texto customizado
+class UpdateCustomText(BaseModel):
+    custom_text: str = Field(..., min_length=1, max_length=1000)
+
+
+# Schema de resposta do texto
+class CustomTextResponse(BaseModel):
+    custom_text: Optional[str] = None
+    user_id: int
+    username: str

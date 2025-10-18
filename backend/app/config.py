@@ -3,16 +3,16 @@ from functools import lru_cache
 
 
 class Settings(BaseSettings):
-    # Segurança
-    SECRET_KEY: str = "sua-chave-secreta-mude-isso-em-producao"
-    ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    # Segurança (OBRIGATÓRIO no .env)
+    SECRET_KEY: str
+    ALGORITHM: str
+    ACCESS_TOKEN_EXPIRE_MINUTES: int
 
-    # Banco de Dados
-    DATABASE_URL: str = "sqlite:///./app.db"
+    # Banco de Dados (OBRIGATÓRIO no .env)
+    DATABASE_URL: str
 
     # CORS - Permite requests da extensão
-    ALLOWED_ORIGINS: list = ["chrome-extension://*"]
+    ALLOWED_ORIGINS: list
 
     class Config:
         env_file = ".env"
