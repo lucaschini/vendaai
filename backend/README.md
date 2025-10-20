@@ -1,4 +1,4 @@
-# 🚀 Backend para Extensão de Navegador
+#Backend para Extensão
 
 API REST desenvolvida em Python com FastAPI, fornecendo sistema completo de autenticação JWT e gerenciamento de dados de usuários para extensões de navegador.
 
@@ -13,7 +13,6 @@ API REST desenvolvida em Python com FastAPI, fornecendo sistema completo de aute
 - [Endpoints da API](#-endpoints-da-api)
 - [Autenticação](#-autenticação)
 - [Exemplos de Uso](#-exemplos-de-uso)
-- [Deploy](#-deploy)
 - [Contribuindo](#-contribuindo)
 
 ## ✨ Características
@@ -254,66 +253,6 @@ async function fetchUserText() {
 }
 ```
 
-## 🚢 Deploy
-
-### Render (Recomendado)
-
-1. Crie uma conta em [render.com](https://render.com)
-2. Conecte seu repositório GitHub
-3. Configure as variáveis de ambiente
-4. Deploy automático!
-
-### Railway
-
-```bash
-# Instalar Railway CLI
-npm install -g @railway/cli
-
-# Login
-railway login
-
-# Deploy
-railway up
-```
-
-### Heroku
-
-```bash
-# Login
-heroku login
-
-# Criar app
-heroku create seu-app-name
-
-# Adicionar PostgreSQL
-heroku addons:create heroku-postgresql:hobby-dev
-
-# Deploy
-git push heroku main
-```
-
-## 🧪 Testes
-
-### Testar Conexão com Banco
-
-Crie um arquivo `test_db.py`:
-
-```python
-from app.utils.database import engine
-from sqlalchemy import text
-
-try:
-    with engine.connect() as connection:
-        result = connection.execute(text("SELECT 1"))
-        print("✅ Conexão com banco bem-sucedida!")
-except Exception as e:
-    print(f"❌ Erro: {e}")
-```
-
-Execute:
-```bash
-python test_db.py
-```
 
 ## 🤝 Contribuindo
 
