@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     DATABASE_URL: str
 
     # CORS - Permite requests da extensão
-    ALLOWED_ORIGINS: list
+    ALLOWED_ORIGINS: list[str]
 
     class Config:
         env_file = ".env"
