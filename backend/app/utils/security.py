@@ -10,7 +10,7 @@ from app.utils.database import get_db
 from app.models.user import User
 
 # Configuração para hash de senhas
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["argon2"], deprecated="auto", argon2__rounds=4)
 
 # Esquema de segurança Bearer Token
 security = HTTPBearer()
