@@ -47,12 +47,9 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
 def decode_token(token: str) -> dict:
     """Decodifica e valida o token JWT"""
     try:
-        print("Token on decode_token: ", token)
         payload = jwt.decode(
             token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
         )
-        print("Depois payload")
-        print(payload)
         return payload
     except JWTError as e:
         print("Erro JWT:", e)
@@ -69,9 +66,7 @@ async def get_current_user(
 ) -> User:
     """Obtém o usuário atual a partir do token"""
     token = credentials.credentials
-    print(token)
     payload = decode_token(token)
-    print(payload)
 
     user_id_str = payload.get("sub")
     if user_id_str is None:

@@ -15,12 +15,6 @@ router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 @router.post("/register", response_model=Token, status_code=status.HTTP_201_CREATED)
 def register(user_data: UserCreate, db: Session = Depends(get_db)):
-    """Registra um novo usuário"""
-    print(f"DEBUG: Email: {user_data.email}")
-    print(f"DEBUG: Username: {user_data.username}")
-    print(f"DEBUG: Password length: {len(user_data.password)}")
-    print(f"DEBUG: Password bytes: {len(user_data.password.encode('utf-8'))}")
-
     # Verifica se email já existe
     if db.query(User).filter(User.email == user_data.email).first():
         raise HTTPException(
