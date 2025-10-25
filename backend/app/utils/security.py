@@ -47,11 +47,15 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
 def decode_token(token: str) -> dict:
     """Decodifica e valida o token JWT"""
     try:
+        print("Token on decode_token: ", token)
         payload = jwt.decode(
             token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
         )
+        print("Depois payload")
+        print(payload)
         return payload
-    except JWTError:
+    except JWTError as e:
+        print("Erro JWT:", e)
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Token inválido ou expirado",
@@ -65,16 +69,19 @@ async def get_current_user(
 ) -> User:
     """Obtém o usuário atual a partir do token"""
     token = credentials.credentials
+    print(token)
     payload = decode_token(token)
+    print(payload)
 
-    user_id: int = payload.get("sub")
-    if user_id is None:
+    user_id_str = payload.get("sub")
+    if user_id_str is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Token inválido",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
+    user_id = int(user_id_str)
     user = db.query(User).filter(User.id == user_id).first()
     if user is None:
         raise HTTPException(

@@ -46,7 +46,7 @@ def register(user_data: UserCreate, db: Session = Depends(get_db)):
     db.refresh(new_user)
 
     # Gera token de acesso
-    access_token = create_access_token(data={"sub": new_user.id})
+    access_token = create_access_token(data={"sub": str(new_user.id)})
 
     return {"access_token": access_token, "token_type": "bearer", "user": new_user}
 
@@ -71,7 +71,7 @@ def login(user_data: UserLogin, db: Session = Depends(get_db)):
         )
 
     # Gera token de acesso
-    access_token = create_access_token(data={"sub": user.id})
+    access_token = create_access_token(data={"sub": str(user.id)})
 
     return {"access_token": access_token, "token_type": "bearer", "user": user}
 
