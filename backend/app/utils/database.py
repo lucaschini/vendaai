@@ -1,16 +1,16 @@
+from typing import Generator
+
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, Session
-from typing import Generator
+from sqlalchemy.orm import Session, sessionmaker
+
 from app.config import settings
 
 # Criar engine do banco com type hint
 # Remove connect_args para PostgreSQL
 if settings.DATABASE_URL.startswith("sqlite"):
-    engine: Engine = create_engine(
-        settings.DATABASE_URL, connect_args={"check_same_thread": False}
-    )
+    engine: Engine = create_engine(settings.DATABASE_URL)
 else:
     engine: Engine = create_engine(settings.DATABASE_URL)
 
