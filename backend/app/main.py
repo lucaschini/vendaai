@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers import auth, user
 from app.utils.database import engine, Base
+from app.config import settings
 
 # Criar as tabelas no banco de dados
 Base.metadata.create_all(bind=engine)
@@ -16,7 +17,7 @@ app = FastAPI(
 # Configurar CORS para permitir requests da extensão
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Em produção, especifique os domínios permitidos
+    allow_origins=settings.ALLOWED_ORIGINS,  # Em produção, especifique os domínios permitidos
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

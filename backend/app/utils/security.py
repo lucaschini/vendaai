@@ -1,16 +1,23 @@
 from datetime import datetime, timedelta
 from typing import Optional
+
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
+
 from app.config import settings
-from app.utils.database import get_db
 from app.models.user import User
+from app.utils.database import get_db
 
 # Configuração para hash de senhas
-pwd_context = CryptContext(schemes=["argon2"], deprecated="auto", argon2__rounds=4)
+# Usando Argon2 (mais moderno e seguro que bcrypt)
+pwd_context = CryptContext(
+    schemes=["argon2", "bcrypt"],  # Argon2 primeiro, bcrypt como fallback
+    deprecated="auto",
+    argon2__rounds=4,
+)
 
 # Esquema de segurança Bearer Token
 security = HTTPBearer()

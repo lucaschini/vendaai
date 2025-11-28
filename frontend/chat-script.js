@@ -82,6 +82,7 @@ async function sendMessage() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
+                systemPrompt: "Você é um assistente de vendas chamado VendAI. Responda de forma direta, objetiva e prática, evitando explicações longas ou redundantes.",
                 message: message,
                 conversationHistory: conversationHistory,
                 context: {
@@ -187,6 +188,7 @@ function getCurrentTime() {
 // ============================================
 // Esta função simula respostas da IA
 // Em produção, as respostas virão da API
+/*
 function generateAIResponse(userMessage) {
   const lowerMessage = userMessage.toLowerCase();
 
@@ -212,7 +214,7 @@ function generateAIResponse(userMessage) {
 
   // Resposta genérica
   return "Entendi sua pergunta. Como assistente de vendas, posso ajudar com técnicas de fechamento, qualificação de leads, gestão de objeções e estratégias de negociação. Como posso ajudar especificamente?";
-}
+} */
 
 // ==========================================
 // 🔴 BACKEND: Carregar histórico de chat

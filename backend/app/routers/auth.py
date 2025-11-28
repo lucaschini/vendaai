@@ -1,13 +1,18 @@
+# app/routers/auth.py - ATUALIZADO PARA UUID
+
+from datetime import date
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from app.schemas.user import UserCreate, UserLogin, Token, UserResponse
+
 from app.models.user import User
+from app.schemas.user import Token, UserCreate, UserLogin, UserResponse
 from app.utils.database import get_db
 from app.utils.security import (
-    get_password_hash,
-    verify_password,
     create_access_token,
     get_current_user,
+    get_password_hash,
+    verify_password,
 )
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
@@ -15,38 +20,28 @@ router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 @router.post("/register", response_model=Token, status_code=status.HTTP_201_CREATED)
 def register(user_data: UserCreate, db: Session = Depends(get_db)):
-    """Registra um novo usuário"""
-    print(f"DEBUG: Email: {user_data.email}")
-    print(f"DEBUG: Username: {user_data.username}")
-    print(f"DEBUG: Password length: {len(user_data.password)}")
-    print(f"DEBUG: Password bytes: {len(user_data.password.encode('utf-8'))}")
+    """Registrar novo usuário"""
 
-    # Verifica se email já existe
-    if db.query(User).filter(User.email == user_data.email).first():
+    # Verificar se email já existe
+    if db.query(User).filter(User.e_mail == user_data.e_mail).first():
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Email já cadastrado"
         )
 
-    # Verifica se username já existe
-    if db.query(User).filter(User.username == user_data.username).first():
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Nome de usuário já cadastrado",
-        )
-
-    # Cria o novo usuário
+    # Criar o novo usuário
     new_user = User(
-        email=user_data.email,
-        username=user_data.username,
-        hashed_password=get_password_hash(user_data.password),
+        nome=user_data.nome,
+        e_mail=user_data.e_mail,
+        senha_hash=get_password_hash(user_data.senha),
+        tipo_usuario=user_data.tipo_usuario,
     )
 
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
 
-    # Gera token de acesso
-    access_token = create_access_token(data={"sub": new_user.id})
+    # Gera token de acesso (UUID convertido para string)
+    access_token = create_access_token(data={"sub": str(new_user.id_usuario)})
 
     return {"access_token": access_token, "token_type": "bearer", "user": new_user}
 
@@ -56,22 +51,21 @@ def login(user_data: UserLogin, db: Session = Depends(get_db)):
     """Realiza login do usuário"""
 
     # Busca usuário pelo email
-    user = db.query(User).filter(User.email == user_data.email).first()
+    user = db.query(User).filter(User.e_mail == user_data.e_mail).first()
 
-    if not user or not verify_password(user_data.password, user.hashed_password):
+    if not user or not verify_password(user_data.senha, user.senha_hash):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Email ou senha incorretos",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    if not user.is_active:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, detail="Usuário inativo"
-        )
+    # Atualizar último login
+    user.ultimo_login = date.today()
+    db.commit()
 
-    # Gera token de acesso
-    access_token = create_access_token(data={"sub": user.id})
+    # Gera token de acesso (UUID convertido para string)
+    access_token = create_access_token(data={"sub": str(user.id_usuario)})
 
     return {"access_token": access_token, "token_type": "bearer", "user": user}
 
@@ -85,6 +79,6 @@ async def get_me(current_user: User = Depends(get_current_user)):
 @router.post("/refresh", response_model=Token)
 async def refresh_token(current_user: User = Depends(get_current_user)):
     """Renova o token de acesso"""
-    access_token = create_access_token(data={"sub": current_user.id})
+    access_token = create_access_token(data={"sub": str(current_user.id_usuario)})
 
     return {"access_token": access_token, "token_type": "bearer", "user": current_user}
