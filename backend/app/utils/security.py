@@ -1,16 +1,23 @@
 from datetime import datetime, timedelta
 from typing import Optional
+
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
+
 from app.config import settings
-from app.utils.database import get_db
 from app.models.user import User
+from app.utils.database import get_db
 
 # Configuração para hash de senhas
-pwd_context = CryptContext(schemes=["argon2"], deprecated="auto", argon2__rounds=4)
+# Usando Argon2 (mais moderno e seguro que bcrypt)
+pwd_context = CryptContext(
+    schemes=["argon2", "bcrypt"],  # Argon2 primeiro, bcrypt como fallback
+    deprecated="auto",
+    argon2__rounds=4,
+)
 
 # Esquema de segurança Bearer Token
 security = HTTPBearer()
@@ -51,8 +58,7 @@ def decode_token(token: str) -> dict:
             token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
         )
         return payload
-    except JWTError as e:
-        print("Erro JWT:", e)
+    except JWTError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Token inválido ou expirado",
@@ -68,15 +74,14 @@ async def get_current_user(
     token = credentials.credentials
     payload = decode_token(token)
 
-    user_id_str = payload.get("sub")
-    if user_id_str is None:
+    user_id: int = payload.get("sub")
+    if user_id is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Token inválido",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    user_id = int(user_id_str)
     user = db.query(User).filter(User.id == user_id).first()
     if user is None:
         raise HTTPException(

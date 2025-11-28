@@ -9,10 +9,7 @@ from app.config import settings
 
 # Criar engine do banco com type hint
 # Remove connect_args para PostgreSQL
-if settings.DATABASE_URL.startswith("sqlite"):
-    engine: Engine = create_engine(settings.DATABASE_URL)
-else:
-    engine: Engine = create_engine(settings.DATABASE_URL)
+engine: Engine = create_engine(settings.DATABASE_URL)
 
 # Criar sessão
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
