@@ -15,7 +15,7 @@ class UserCreate(BaseModel):
 
 # Schema para login
 class UserLogin(BaseModel):
-    e_mail: EmailStr = Field(..., alias="email")
+    e_mail: EmailStr = Field(..., alias="e_mail")
     senha: str = Field(..., alias="password")
 
 

@@ -74,15 +74,27 @@ async def get_current_user(
     token = credentials.credentials
     payload = decode_token(token)
 
-    user_id: int = payload.get("sub")
-    if user_id is None:
+    user_id_str: str = payload.get("sub")
+    if user_id_str is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Token inválido",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    user = db.query(User).filter(User.id == user_id).first()
+    # Converter string UUID para objeto UUID
+    try:
+        from uuid import UUID
+
+        user_id = UUID(user_id_str)
+    except (ValueError, AttributeError):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="ID de usuário inválido no token",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    user = db.query(User).filter(User.id_usuario == user_id).first()
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
