@@ -11,6 +11,8 @@ class ClienteLeadCreate(BaseModel):
     e_mail: Optional[EmailStr] = None
     empresa: Optional[str] = Field(None, max_length=100)
     observacao: Optional[str] = Field(None, max_length=100)
+    # id_usuario será atribuído automaticamente pelo backend usando current_user
+    # Não precisa ser enviado pelo frontend
 
 
 # Schema para atualização de cliente
@@ -30,6 +32,7 @@ class ClienteLeadResponse(BaseModel):
     e_mail: Optional[str]
     empresa: Optional[str]
     observacao: Optional[str]
+    id_usuario: UUID  # ✅ NOVO: ID do usuário que criou o cliente
 
     class Config:
         from_attributes = True
