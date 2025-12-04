@@ -1,8 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import auth, user
-from app.utils.database import engine, Base
+
 from app.config import settings
+from app.routers import auth, chamada, clientes, historico_chat, sugestoes, user, vendas
+from app.utils.database import Base, engine
 
 # Criar as tabelas no banco de dados
 Base.metadata.create_all(bind=engine)
@@ -26,6 +27,11 @@ app.add_middleware(
 # Incluir rotas
 app.include_router(auth.router)
 app.include_router(user.router)
+app.include_router(chamada.router)
+app.include_router(clientes.router)
+app.include_router(sugestoes.router)
+app.include_router(vendas.router)
+app.include_router(historico_chat.router)
 
 
 @app.get("/")

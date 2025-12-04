@@ -1,0 +1,25 @@
+:host, :root{
+  --hud-w: 315px;
+  --hud-h: 89px;
+  --panel-w: 552px;
+  --panel-h: 397px;
+
+  --icon: 40px;
+  --blur: 14px;
+  --outline: rgba(255,255,255,0.20);
+  --glass: rgba(24,24,27,0.92);
+  --text: #FFFFFF;
+  --muted: rgba(255,255,255,0.85);
+
+  --shadow-in: 0 4px 24px rgba(0,0,0,0.25) inset;
+  --shadow-out: 0 8px 24px rgba(0,0,0,0.25);
+
+  --btn-gradient: linear-gradient(180deg, #6F8CFF 0%, #5A79F5 100%);
+  --btn-inner: #E9E9FF;
+}
+
+/* Ensure text and font are inherited inside the Shadow DOM */
+:host{
+  color: var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
