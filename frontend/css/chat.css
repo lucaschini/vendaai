@@ -1,0 +1,222 @@
+.chat-panel {
+  background: rgba(24, 24, 27, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 16px;
+  width: 360px;
+  max-height: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-right: 8px;
+  overflow-x: hidden;
+}
+
+.chat-messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.message {
+  display: flex;
+  width: 100%;
+}
+
+.message.user {
+  justify-content: flex-end;
+}
+
+.message.assistant {
+  justify-content: flex-start;
+}
+
+.message-bubble {
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.92);
+  padding: 10px 14px;
+  border-radius: 16px;
+  max-width: 80%;
+  font-size: 14px;
+  line-height: 1.5;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+.message.user .message-bubble {
+  background: rgba(99, 102, 241, 0.8);
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+.message.assistant .message-bubble {
+  background: rgba(255, 255, 255, 0.12);
+  border-bottom-left-radius: 4px;
+}
+
+.message-bubble code {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+  word-break: break-all;
+}
+
+.message-bubble pre {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 12px;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 8px 0;
+  max-width: 100%;
+}
+
+.message-bubble pre code {
+  background: none;
+  padding: 0;
+  word-break: normal;
+  white-space: pre-wrap;
+}
+
+.message-bubble strong {
+  font-weight: 600;
+}
+
+.message-bubble em {
+  font-style: italic;
+}
+
+.message-bubble a {
+  color: var(--primary);
+  text-decoration: underline;
+  word-break: break-word;
+}
+
+.message-bubble a:hover {
+  opacity: 0.8;
+}
+
+.message-bubble ul {
+  margin: 8px 0;
+  padding-left: 20px;
+  max-width: 100%;
+}
+
+.message-bubble li {
+  margin: 4px 0;
+  word-wrap: break-word;
+}
+
+.message-bubble h1,
+.message-bubble h2,
+.message-bubble h3 {
+  margin: 12px 0 8px 0;
+  font-weight: 600;
+  word-wrap: break-word;
+}
+
+.message-bubble h1 { font-size: 1.4em; }
+.message-bubble h2 { font-size: 1.2em; }
+.message-bubble h3 { font-size: 1.1em; }
+
+.chat-input-container {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 8px 12px;
+}
+
+.chat-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 14px;
+  padding: 6px 8px;
+}
+
+.chat-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.send-btn {
+  background: rgba(99, 102, 241, 0.8);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.send-btn:hover {
+  background: rgba(99, 102, 241, 1);
+  transform: scale(1.05);
+}
+
+.send-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: white;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.chat-panel.hidden {
+  display: none;
+}
+
+#chat-container {
+  display: none;
+  position: fixed; /* segue a HUD */
+  z-index: 9998;   /* abaixo da HUD */
+}
+
+#chat-container.active {
+  display: block;
+}
+
+/* Ensure chat panel content stays within the panel and scrolls */
+#chat-container .panel {
+  overflow: hidden; /* prevent bubbles from escaping rounded background */
+}
+
+#chat-container .section {
+  flex: 1 1 auto;   /* take remaining height above input */
+  min-height: 0;    /* allow children with overflow to scroll inside */
+  display: flex;    /* make .chat-messages flex child */
+  flex-direction: column;
+}
+
+#chat-container .chat-messages {
+  flex: 1 1 auto;   /* fill vertical space and enable scroll */
+  min-height: 0;    /* required for proper flex scrolling */
+}
